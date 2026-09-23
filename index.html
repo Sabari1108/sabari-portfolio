@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sabari Logesh — Graphic Designer &amp; Video Editor</title>
+<meta name="description" content="Portfolio of Sabari Logesh A, a graphic designer, motion designer and video editor based in Bangalore. Campaigns, motion graphics, AI films and reels.">
+<meta property="og:title" content="Sabari Logesh — Graphic Designer & Video Editor">
+<meta property="og:description" content="Campaigns, motion graphics, AI films and reels from Bangalore.">
+<meta property="og:image" content="assets/img/idex-key-visual-dark.webp">
+<meta name="theme-color" content="#08080a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080a'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black,Arial' font-weight='900' font-size='30' fill='%23d4ff3a'%3ESL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="is-loading">
+
+<!-- LOADER -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__grid">
+    <span class="loader__label mono">Sabari Logesh — Portfolio</span>
+    <span class="loader__label mono loader__label--r">Bangalore, IN</span>
+  </div>
+  <div class="loader__count"><span id="loaderNum">0</span><sup>%</sup></div>
+  <div class="loader__bar"><i id="loaderBar"></i></div>
+  <div class="loader__words mono"><span>Design</span><span>Motion</span><span>Edit</span><span>Story</span></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"><div class="cursor__dot"></div><div class="cursor__ring"><span class="cursor__label" id="cursorLabel"></span></div></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a href="#top" class="nav__logo magnetic" data-cursor="Top">SL<span>®</span></a>
+  <nav class="nav__links">
+    <a href="#work" class="nav__link"><span data-text="Work">Work</span></a>
+    <a href="#reels" class="nav__link"><span data-text="Reels">Reels</span></a>
+    <a href="#about" class="nav__link"><span data-text="About">About</span></a>
+    <a href="#contact" class="nav__link"><span data-text="Contact">Contact</span></a>
+  </nav>
+  <div class="nav__right">
+    <span class="nav__status mono"><i></i> Open to work</span>
+    <button class="nav__menu magnetic" id="menuBtn" aria-label="Menu"><span></span><span></span></button>
+  </div>
+</header>
+<div class="menu" id="menu">
+  <a href="#work">Work</a><a href="#reels">Reels</a><a href="#about">About</a><a href="#contact">Contact</a>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas" class="hero__canvas"></canvas>
+  <div class="hero__meta mono">
+    <span>( Portfolio ’26 )</span>
+    <span class="hero__coords" id="coords">12.8452° N, 77.6602° E</span>
+  </div>
+  <h1 class="hero__title" aria-label="Sabari Logesh">
+    <span class="line"><span class="split">Sabari</span></span>
+    <span class="line line--indent"><span class="split">Logesh</span><em class="hero__star">✳</em></span>
+  </h1>
+  <div class="hero__bottom">
+    <p class="hero__intro">Graphic designer &amp; video editor who turns briefs into <b>motion, campaigns</b> and <b>stories</b> people stop scrolling for.</p>
+    <div class="hero__roles mono">
+      <span>Motion Graphics</span><span>VFX Editing</span><span>AI Films</span><span>Campaign Design</span>
+    </div>
+    <a href="#work" class="hero__scroll magnetic" data-cursor="Scroll">
+      <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text><textPath href="#circ">SCROLL TO EXPLORE • SCROLL TO EXPLORE • </textPath></text></svg>
+      <i>↓</i>
+    </a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marq1"><span>Motion Graphics</span><b>✦</b><span>Video Editing</span><b>✦</b><span>AI Films</span><b>✦</b><span>Brand Campaigns</span><b>✦</b><span>Social Content</span><b>✦</b><span>VFX</span><b>✦</b></div>
+</section>
+
+<!-- SHOWREEL -->
+<section class="showreel" id="showreel">
+  <div class="showreel__sticky">
+    <div class="showreel__frame" id="reelFrame" data-cursor="Play">
+      <video id="showreelVideo" src="assets/video/kognivera-diwali.mp4" poster="assets/video/kognivera-diwali-cover.jpg" muted loop playsinline preload="metadata"></video>
+      <div class="showreel__label"><span class="mono">Showreel</span><span class="mono">2023 — 2026</span></div>
+    </div>
+    <h2 class="showreel__text"><span>Play</span><span>Reel</span></h2>
+  </div>
+</section>
+
+<!-- WORK — WebGL 3D roll carousel -->
+<section class="work" id="work">
+  <div class="section-head">
+    <span class="mono">( 01 )</span>
+    <h2 class="reveal-title">Selected <i>Work</i></h2>
+    <span class="mono section-head__count"><b>10</b> Projects</span>
+  </div>
+  <div class="roll" id="roll">
+    <canvas id="rollCanvas"></canvas>
+    <div class="roll__info">
+      <span class="mono roll__idx" id="rollIdx">01 / 10</span>
+      <h3 class="roll__title" id="rollTitle">—</h3>
+      <span class="mono roll__client" id="rollClient">—</span>
+    </div>
+    <div class="roll__hint mono"><span>Drag</span> or scroll · Click to open</div>
+  </div>
+</section>
+
+<!-- INDEX (hover reveal list) -->
+<section class="index" id="index">
+  <div class="section-head">
+    <span class="mono">( 02 )</span>
+    <h2 class="reveal-title">Project <i>Index</i></h2>
+    <span class="mono section-head__count">Hover to preview</span>
+  </div>
+  <ul class="index__list" id="indexList"></ul>
+  <div class="index__preview" id="indexPreview"><div class="index__preview-inner"></div></div>
+</section>
+
+<!-- REELS — pinned horizontal 3D cards -->
+<section class="reels" id="reels">
+  <div class="reels__pin">
+    <div class="section-head section-head--row">
+      <span class="mono">( 03 )</span>
+      <h2 class="reveal-title">Reels <i>&amp;</i> Edits</h2>
+      <span class="mono section-head__count">Hover to play sound-off</span>
+    </div>
+    <div class="reels__track" id="reelsTrack"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-head">
+    <span class="mono">( 04 )</span>
+    <h2 class="reveal-title">About <i>Me</i></h2>
+    <span></span>
+  </div>
+  <p class="about__big" id="aboutBig">I’m a Graphic Designer and Video Editor with hands-on experience in VFX editing. I love motion graphics and CGI, and bringing concepts to life through dynamic visuals and creative storytelling, whether it’s a hospital, an interiors brand or a devotional AI film.</p>
+  <div class="about__grid">
+    <div class="about__photo tilt" data-cursor="Hi!">
+      <div class="about__card">
+        <span class="mono">Based in</span><strong>Bangalore</strong>
+        <span class="mono">Working across</span><strong>Design · Motion · Edit</strong>
+        <span class="about__clock mono" id="clock">--:--:-- IST</span>
+      </div>
+    </div>
+    <div class="about__exp">
+      <h4 class="mono">Experience &amp; Education</h4>
+      <ul id="expList"></ul>
+    </div>
+  </div>
+  <div class="tools">
+    <h4 class="mono">Toolkit</h4>
+    <div class="tools__grid" id="toolsGrid"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact__reveal" id="contactReveal">
+    <h2 class="contact__big contact__big--base">Let’s make<br>something<br>move.</h2>
+    <h2 class="contact__big contact__big--mask" aria-hidden="true">Say hello<br>& start a<br>project ✳</h2>
+  </div>
+  <div class="contact__row">
+    <a class="glow-btn magnetic" href="mailto:sabarilogesh11@gmail.com" data-cursor="Email">
+      <span>sabarilogesh11@gmail.com</span><i>→</i>
+    </a>
+    <div class="contact__links mono">
+      <a href="https://www.behance.net/sabarilogesh" target="_blank" rel="noopener" class="u-link">Behance ↗</a>
+      <a href="https://linkedin.com/in/sabari-logesh-8b44a31a7/" target="_blank" rel="noopener" class="u-link">LinkedIn ↗</a>
+      <a href="tel:+919944538700" class="u-link">+91 99445 38700</a>
+      <a href="assets/sabari-logesh-resume.pdf" target="_blank" class="u-link">Résumé (PDF) ↗</a>
+    </div>
+  </div>
+  <footer class="footer mono">
+    <span>© 2026 Sabari Logesh A</span>
+    <span>Built with Three.js · GSAP · Lenis</span>
+    <a href="#top" class="u-link">Back to top ↑</a>
+  </footer>
+</section>
+</main>
+
+<!-- PROJECT MODAL -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal__bg"></div>
+  <div class="modal__panel" id="modalPanel" data-lenis-prevent>
+    <button class="modal__close magnetic" id="modalClose" data-cursor="Close">✕</button>
+    <div class="modal__head">
+      <span class="mono" id="mCat"></span>
+      <h2 id="mTitle"></h2>
+      <span class="mono" id="mClient"></span>
+    </div>
+    <div class="modal__body">
+      <p id="mDesc"></p>
+      <div class="modal__tags" id="mTags"></div>
+    </div>
+    <div class="modal__media" id="mMedia"></div>
+    <button class="modal__next" id="mNext" data-cursor="Next"><span class="mono">Next project</span><strong id="mNextTitle"></strong></button>
+  </div>
+</div>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.js" } }</script>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
