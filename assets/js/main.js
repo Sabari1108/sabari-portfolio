@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PROJECTS, REELS, EXPERIENCE, TOOLS } from './data.js';
+import { PROJECTS, REELS, EXPERIENCE, TOOLS } from './data.js?v=20260923c';
 
 const { gsap, ScrollTrigger } = window;
 gsap.registerPlugin(ScrollTrigger);
