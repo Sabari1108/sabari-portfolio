@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PROJECTS, REELS, EXPERIENCE, TOOLS } from './data.js?v=20260923c';
+import { PROJECTS, REELS, EXPERIENCE, TOOLS } from './data.js?v=20260923d';
 
 const { gsap, ScrollTrigger } = window;
 gsap.registerPlugin(ScrollTrigger);
@@ -164,7 +164,7 @@ void main(){
   float t=uTime*.08;vec2 q=vec2(fbm(p*1.6+t),fbm(p*1.6-t+3.1));float f=fbm(p*1.3+q*1.8+t*.5);
   vec3 bg=mix(uA,uB,smoothstep(.25,.85,f));bg=mix(bg,uC,smoothstep(.62,.95,f)*.55);
   // portrait placement: height = 104% of frame, anchored bottom, offset right
-  float ih=1.04, iw=ih*uImg.x/uImg.y*(uRes.y/uRes.x);
+  float ih=min(1.04,1.12*(uRes.x/uRes.y)*(uImg.y/uImg.x)), iw=ih*uImg.x/uImg.y*(uRes.y/uRes.x);
   float cx= uRes.x/uRes.y>1.3 ? .6 : .5;
   vec2 d=v-uM;float dl=length(d*asp);
   vec2 push=uV*smoothstep(.3,0.,dl)*uH*.9;
