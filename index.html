@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,10 +9,9 @@
 <meta property="og:description" content="Campaigns, motion graphics, AI films and reels from Bangalore.">
 <meta property="og:image" content="assets/img/idex-key-visual-dark.webp">
 <meta name="theme-color" content="#08080a">
+<script src="assets/js/theme.js"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080a'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black,Arial' font-weight='900' font-size='30' fill='%23d4ff3a'%3ESL%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="is-loading">
@@ -42,6 +41,7 @@
   </nav>
   <div class="nav__right">
     <span class="nav__status mono"><i></i> Open to work</span>
+    <button class="tt mono" data-theme-toggle data-cursor="Theme" aria-label="Change theme"><span class="tt__dot"></span><span data-theme-label>Auto</span></button>
     <button class="nav__menu magnetic" id="menuBtn" aria-label="Menu"><span></span><span></span></button>
   </div>
 </header>
@@ -53,27 +53,26 @@
 
 <main id="top">
 
-<!-- HERO -->
-<section class="hero" id="hero">
-  <canvas id="heroCanvas" class="hero__canvas"></canvas>
-  <div class="hero__meta mono">
-    <span>( Portfolio ’26 )</span>
-    <span class="hero__coords" id="coords">12.8452° N, 77.6602° E</span>
+<!-- HERO — viewfinder -->
+<section class="va" id="hero">
+  <div class="va__row">
+    <p class="va__intro"><b>Graphic designer &amp; video editor</b> from Bangalore. I cut, animate and design campaigns, reels and AI films that make people stop scrolling.</p>
+    <div class="va__role"><span class="mono">Currently rolling as</span><span class="va__word" id="word"><i>a Motion Designer</i><i>a Video Editor</i><i>an AI Filmmaker</i><i>a Campaign Designer</i></span></div>
   </div>
-  <h1 class="hero__title" aria-label="Sabari Logesh">
-    <span class="line"><span class="split">Sabari</span></span>
-    <span class="line line--indent"><span class="split">Logesh</span><em class="hero__star">✳</em></span>
-  </h1>
-  <div class="hero__bottom">
-    <p class="hero__intro">Graphic designer &amp; video editor who turns briefs into <b>motion, campaigns</b> and <b>stories</b> people stop scrolling for.</p>
-    <div class="hero__roles mono">
-      <span>Motion Graphics</span><span>VFX Editing</span><span>AI Films</span><span>Campaign Design</span>
+  <div class="vf" id="vf">
+    <canvas id="c"></canvas>
+    <div class="vf__ui">
+      <div class="thirds"></div>
+      <span class="vf__c tl"></span><span class="vf__c tr"></span><span class="vf__c bl"></span><span class="vf__c br"></span>
+      <span class="vf__t tl"><span class="rec"><i></i>Rec</span><span id="tc">00:00:00:00</span></span>
+      <span class="vf__t tr"><span>4K · 25fps</span><span>ISO 800</span><span>f/1.8</span></span>
+      <span class="vf__t bl"><span>SABARI_LOGESH_REEL_V26.MOV</span></span>
+      <span class="vf__t br"><span id="batt">▮▮▮▯ 76%</span></span>
+      <span class="vf__cross"></span>
+      <div class="meter" id="meter"></div>
     </div>
-    <a href="#work" class="hero__scroll magnetic" data-cursor="Scroll">
-      <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text><textPath href="#circ">SCROLL TO EXPLORE • SCROLL TO EXPLORE • </textPath></text></svg>
-      <i>↓</i>
-    </a>
   </div>
+  <h1 class="va__name" id="name" aria-label="Sabari Logesh">Sabari Logesh</h1>
 </section>
 
 <!-- MARQUEE -->
@@ -106,7 +105,7 @@
       <h3 class="roll__title" id="rollTitle">—</h3>
       <span class="mono roll__client" id="rollClient">—</span>
     </div>
-    <div class="roll__hint mono"><span>Drag</span> or scroll · Click to open</div>
+    <div class="roll__hint mono"><span>Drag</span> or scroll · Tap a card to open</div>
   </div>
 </section>
 
@@ -143,6 +142,7 @@
   <p class="about__big" id="aboutBig">I’m a Graphic Designer and Video Editor with hands-on experience in VFX editing. I love motion graphics and CGI, and bringing concepts to life through dynamic visuals and creative storytelling, whether it’s a hospital, an interiors brand or a devotional AI film.</p>
   <div class="about__grid">
     <div class="about__photo tilt" data-cursor="Hi!">
+      <img src="assets/img/me/front-photo.webp" alt="Sabari Logesh" loading="lazy">
       <div class="about__card">
         <span class="mono">Based in</span><strong>Bangalore</strong>
         <span class="mono">Working across</span><strong>Design · Motion · Edit</strong>

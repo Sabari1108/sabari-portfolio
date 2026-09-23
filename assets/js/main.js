@@ -133,156 +133,81 @@ float snoise(vec3 v){
   return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 }`;
 
-/* ================================================= HERO — noise blob + particle field */
-function initHero() {
-  const canvas = $('#heroCanvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  camera.position.z = 7;
+/* ================================================= HERO — viewfinder */
+async function initViewfinder(){
 
-  const uniforms = {
-    uTime: { value: 0 }, uMouse: { value: new THREE.Vector2() },
-    uAmp: { value: 0.0 }, uScroll: { value: 0 },
-  };
-  const blobMat = new THREE.ShaderMaterial({
-    uniforms,
-    vertexShader: NOISE + /* glsl */ `
-      uniform float uTime, uAmp, uScroll; uniform vec2 uMouse;
-      varying vec3 vN; varying vec3 vPos; varying float vD;
-      float disp(vec3 p){
-        float n = snoise(p*1.1 + vec3(uTime*.18, uTime*.12, 0.));
-        n += .45*snoise(p*2.6 - uTime*.25);
-        float m = smoothstep(1.6,0.,distance(p.xy, uMouse*1.6))*.35;
-        return n*(.28+uAmp*.1) + m + uScroll*.5*snoise(p*3.+uTime);
-      }
-      void main(){
-        vec3 p = position; float d = disp(normalize(p));
-        vec3 np = p + normal*d;
-        // recompute normal via neighbours
-        vec3 t = normalize(cross(normal, vec3(0.,1.,.001)));
-        vec3 b = normalize(cross(normal, t));
-        float e = .01;
-        vec3 p1 = p + t*e; p1 += normalize(p1)*disp(normalize(p1));
-        vec3 p2 = p + b*e; p2 += normalize(p2)*disp(normalize(p2));
-        vN = normalize(normalMatrix * normalize(cross(p1-np, p2-np)));
-        vec4 mv = modelViewMatrix*vec4(np,1.);
-        vPos = mv.xyz; vD = d;
-        gl_Position = projectionMatrix*mv;
-      }`,
-    fragmentShader: /* glsl */ `
-      uniform float uTime; varying vec3 vN; varying vec3 vPos; varying float vD;
-      vec3 pal(float t){ return .5+.5*cos(6.2831*(vec3(1.,1.,1.)*t+vec3(.0,.33,.67))); }
-      void main(){
-        vec3 V = normalize(-vPos); vec3 N = normalize(vN);
-        if(!gl_FrontFacing) N = -N;
-        float fres = pow(1.-max(dot(N,V),0.), 2.2);
-        vec3 lime = vec3(.83,1.,.23), flame = vec3(1.,.35,.12), violet = vec3(.36,.2,.9);
-        vec3 base = mix(vec3(.02,.02,.03), violet*.6, smoothstep(-.3,.5,vD));
-        base = mix(base, flame, smoothstep(.25,.7,vD)*.8);
-        vec3 irid = pal(fres*1.2 + vD*.8 + uTime*.05)*.55;
-        vec3 L = normalize(vec3(.6,.8,.9));
-        float spec = pow(max(dot(reflect(-L,N),V),0.), 40.);
-        vec3 col = base + irid*fres + lime*pow(fres,3.)*1.2 + spec*.9;
-        gl_FragColor = vec4(col, 1.);
-      }`,
-  });
-  const blob = new THREE.Mesh(new THREE.IcosahedronGeometry(1.55, isMobile() ? 48 : 96), blobMat);
-  scene.add(blob);
 
-  // particle field
-  const N = isMobile() ? 1800 : 4200;
-  const pos = new Float32Array(N * 3), rnd = new Float32Array(N);
-  for (let i = 0; i < N; i++) {
-    const r = 2.4 + Math.pow(Math.random(), 0.6) * 5.5;
-    const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
-    pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
-    pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th) * 0.7;
-    pos[i * 3 + 2] = r * Math.cos(ph) - 1.5;
-    rnd[i] = Math.random();
-  }
-  const pg = new THREE.BufferGeometry();
-  pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  pg.setAttribute('aR', new THREE.BufferAttribute(rnd, 1));
-  const pMat = new THREE.ShaderMaterial({
-    uniforms: { ...uniforms, uPR: { value: renderer.getPixelRatio() } },
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    vertexShader: NOISE + /* glsl */ `
-      uniform float uTime, uPR, uScroll; uniform vec2 uMouse; attribute float aR; varying float vA; varying float vR;
-      void main(){
-        vec3 p = position;
-        p += .25*vec3(snoise(p*.3+uTime*.1), snoise(p*.3+7.+uTime*.1), snoise(p*.3+13.));
-        vec4 mv = modelViewMatrix*vec4(p,1.);
-        // push away from mouse
-        vec4 clip = projectionMatrix*mv; vec2 ndc = clip.xy/clip.w;
-        float d = distance(ndc, uMouse);
-        mv.xy += normalize(ndc-uMouse+.0001)*smoothstep(.35,0.,d)*.6;
-        gl_Position = projectionMatrix*mv;
-        gl_PointSize = (1.2 + aR*2.6) * uPR * (6./-mv.z);
-        vA = .25 + .75*aR; vR = aR;
-      }`,
-    fragmentShader: /* glsl */ `
-      varying float vA; varying float vR;
-      void main(){
-        float d = length(gl_PointCoord-.5); if(d>.5) discard;
-        vec3 c = mix(vec3(.93,.92,.88), vec3(.83,1.,.23), step(.92,vR));
-        gl_FragColor = vec4(c, (1.-d*2.)*vA*.7);
-      }`,
-  });
-  const points = new THREE.Points(pg, pMat);
-  scene.add(points);
 
-  // wire ring
-  const ringGeo = new THREE.TorusGeometry(2.55, 0.004, 8, 200);
-  const ringM = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xd4ff3a, transparent: true, opacity: 0.5 }));
-  ringM.rotation.x = Math.PI * 0.42;
-  scene.add(ringM);
+// name: split, italic serif accent on one letter, fit to width
+const nm=$('#name');nm.innerHTML=[...'Sabari Logesh'].map((c,i)=>`<span class="ch${i===7?' alt':''}" style="transition-delay:${.35+i*.04}s">${c===' '?'<span style="display:inline-block;width:.28em"></span>':c}</span>`).join('');
+function fit(){nm.style.fontSize='100px';const w=(()=>{const r=document.createRange();r.selectNodeContents(nm);return r.getBoundingClientRect().width})();const W=nm.parentElement.clientWidth-2*parseFloat(getComputedStyle(nm.parentElement).paddingLeft);nm.style.fontSize=(100*W/w*.995)+'px'}
+document.fonts.load('900 100px "Inter Tight"').then(()=>document.fonts.load('italic 400 100px "Instrument Serif"')).then(fit);setTimeout(fit,1500);addEventListener('resize',fit);fit();
+let wi=0;const words=$('#word').children;setInterval(()=>{wi=(wi+1)%words.length;[...words].forEach(w=>w.style.transform=`translateY(${-wi*100}%)`)},2400);
+// timecode + audio meter
+const t0=performance.now();const pad=n=>String(n).padStart(2,'0');
+const met=$('#meter');met.innerHTML='<i></i>'.repeat(10);const bars=[...met.children];
+setInterval(()=>{const s=(performance.now()-t0)/1000;$('#tc').textContent=`${pad(0)}:${pad(Math.floor(s/60))}:${pad(Math.floor(s%60))}:${pad(Math.floor((s%1)*25))}`;bars.forEach((b,i)=>b.style.height=(15+Math.random()*80*(1-Math.abs(i-4.5)/8))+'%')},40);
+// WebGL: animated gradient field + duotone portrait with fluid mouse distortion
+const vf=$('#vf'),R=new THREE.WebGLRenderer({canvas:$('#c'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.5:2));
+const sc=new THREE.Scene(),cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const tex=await new THREE.TextureLoader().loadAsync('assets/img/me/side-color.webp');tex.colorSpace=THREE.SRGBColorSpace;
+const U={uTex:{value:tex},uImg:{value:new THREE.Vector2(tex.image.width,tex.image.height)},uRes:{value:new THREE.Vector2(1,1)},uTime:{value:0},uM:{value:new THREE.Vector2(.5,.5)},uV:{value:new THREE.Vector2()},uH:{value:0},uIn:{value:0},
+ uA:{value:new THREE.Color()},uD:{value:new THREE.Color()},uE:{value:new THREE.Color()},uB:{value:new THREE.Color()},uC:{value:new THREE.Color()},uLight:{value:0}};
+sc.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:U,vertexShader:`varying vec2 v;void main(){v=uv;gl_Position=vec4(position,1.);}`,
+fragmentShader:`uniform sampler2D uTex;uniform vec2 uImg,uRes,uM,uV;uniform float uTime,uH,uIn,uLight;uniform vec3 uA,uB,uC,uD,uE;varying vec2 v;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*n(p);p*=2.03;a*=.5;}return s;}
+void main(){
+  vec2 asp=vec2(uRes.x/uRes.y,1.);vec2 p=v*asp;
+  // flowing background
+  float t=uTime*.08;vec2 q=vec2(fbm(p*1.6+t),fbm(p*1.6-t+3.1));float f=fbm(p*1.3+q*1.8+t*.5);
+  vec3 bg=mix(uA,uB,smoothstep(.25,.85,f));bg=mix(bg,uC,smoothstep(.62,.95,f)*.55);
+  // portrait placement: height = 104% of frame, anchored bottom, offset right
+  float ih=1.04, iw=ih*uImg.x/uImg.y*(uRes.y/uRes.x);
+  float cx= uRes.x/uRes.y>1.3 ? .6 : .5;
+  vec2 d=v-uM;float dl=length(d*asp);
+  vec2 push=uV*smoothstep(.3,0.,dl)*uH*.9;
+  float rip=sin(dl*40.-uTime*5.)*.006*smoothstep(.35,0.,dl)*uH;
+  vec2 uv=vec2((v.x-(cx-iw*.5))/iw,(v.y+.0)/ih);
+  uv+= -push + normalize(d+1e-4)*rip;
+  uv.y-= (1.-uIn)*.12;
+  vec4 im=vec4(0.);
+  if(uv.x>0.&&uv.x<1.&&uv.y>0.&&uv.y<1.){float s=length(push)*.25+.0015;
+    im.r=texture2D(uTex,uv+vec2(s,0.)).r;im.g=texture2D(uTex,uv).g;im.b=texture2D(uTex,uv-vec2(s,0.)).b;im.a=texture2D(uTex,uv).a;}
+  // duotone the portrait, reveal true colour around the cursor
+  float g=dot(im.rgb,vec3(.299,.587,.114));g=pow(smoothstep(.0,.85,g),.72);
+  vec3 duo=mix(uD,uE,g);
+  float reveal=smoothstep(.22,.05,dl)*uH;
+  vec3 person=mix(duo,im.rgb,reveal);
+  vec3 col=mix(bg,person,im.a*uIn);
+  // soft rim light from the background colour
+  col+= uC*pow(1.-abs(im.a*2.-1.),6.)*.25*uIn;
+  // vignette + scanlines + grain
+  col*=1.-(uLight>.5?.25:.55)*pow(length((v-.5)*vec2(1.2,1.)),2.);
+  col*=.96+.04*sin(v.y*uRes.y*1.6);
+  col+=(h(v*uRes+uTime)-.5)*.06;
+  gl_FragColor=vec4(col,1.);}`})));
+function size(){const w=vf.clientWidth,h=vf.clientHeight;R.setSize(w,h,false);U.uRes.value.set(w,h)}new ResizeObserver(size).observe(vf);size();
+function th(){const l=document.documentElement.dataset.theme==='light';
+ U.uLight.value=l?1:0;vf.classList.toggle('lt',l);if(l){U.uA.value.set('#e9e3d8');U.uB.value.set('#cfc6f6');U.uC.value.set('#ff8a4c');U.uD.value.set('#1b1640');U.uE.value.set('#fff6ea')}else{U.uA.value.set('#06050b');U.uB.value.set('#3a1f96');U.uC.value.set('#d4ff3a');U.uD.value.set('#0b0816');U.uE.value.set('#f3eeff')}}
+th();addEventListener('themechange',th);
+const m=new THREE.Vector2(.5,.5);let hov=0;
+vf.addEventListener('pointermove',e=>{const r=vf.getBoundingClientRect();m.set((e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height)});
+vf.addEventListener('pointerenter',()=>hov=1);vf.addEventListener('pointerleave',()=>hov=0);
+const clk=new THREE.Clock();let inT=0;
+let visible=true;new IntersectionObserver(([e])=>visible=e.isIntersecting).observe(vf);const renderOnce=()=>R.render(sc,cam);
+(function loop(){requestAnimationFrame(loop);if(!visible)return;const t=clk.getElapsedTime();U.uTime.value=t;if(document.body.classList.contains('is-loading')){inT=t;return renderOnce();}U.uIn.value=Math.min(1,(t-inT)/1.6);
+ if(isTouch){const k=t*.35;m.set(.5+.28*Math.sin(k*1.3),.5+.22*Math.sin(k*1.9));hov=.55;}
+ const cur=U.uM.value,nx=cur.clone().lerp(m,.1);U.uV.value.lerp(nx.clone().sub(cur),.25);cur.copy(nx);U.uH.value+=(hov-U.uH.value)*.06;R.render(sc,cam)})();
 
-  function size() {
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    const s = w < 700 ? 0.72 : 1;
-    blob.scale.setScalar(s); ringM.scale.setScalar(s);
-    blob.position.x = w < 700 ? 0 : 1.3;
-    ringM.position.x = blob.position.x;
-  }
-  size(); addEventListener('resize', size);
-
-  let visible = true;
-  new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(canvas);
-  const sm = new THREE.Vector2();
-  const clock = new THREE.Clock();
-  const state = { scroll: 0 };
-  ScrollTrigger.create({ trigger: '#hero', start: 'top top', end: 'bottom top', onUpdate: (s) => (state.scroll = s.progress) });
-
-  gsap.ticker.add(() => {
-    if (!visible) return;
-    const t = clock.getElapsedTime();
-    uniforms.uTime.value = t;
-    sm.x += (mouse.nx - sm.x) * 0.05; sm.y += (mouse.ny - sm.y) * 0.05;
-    uniforms.uMouse.value.copy(sm);
-    uniforms.uScroll.value += (state.scroll - uniforms.uScroll.value) * 0.1;
-    blob.rotation.y = t * 0.08 + sm.x * 0.4;
-    blob.rotation.x = -sm.y * 0.3;
-    ringM.rotation.z = t * 0.2;
-    ringM.rotation.y = sm.x * 0.3;
-    points.rotation.y = t * 0.02 + sm.x * 0.12;
-    points.rotation.x = sm.y * 0.08;
-    camera.position.y = -state.scroll * 1.6;
-    camera.position.z = 7 - state.scroll * 1.5;
-    renderer.render(scene, camera);
-  });
-  return uniforms;
 }
 
 /* ================================================= WORK — WebGL 3D roll carousel */
 function initRoll(onOpen) {
   const wrap = $('#roll'), canvas = $('#rollCanvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75));
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
   const group = new THREE.Group();
@@ -313,7 +238,7 @@ function initRoll(onOpen) {
       gl_Position = projectionMatrix*viewMatrix*world;
     }`;
   const frag = /* glsl */ `
-    uniform sampler2D uTex; uniform vec2 uImg, uPlane; uniform float uHover, uVel, uTime, uReady, uR;
+    uniform sampler2D uTex; uniform vec2 uImg, uPlane; uniform float uHover, uVel, uTime, uReady, uR; uniform vec3 uBg;
     varying vec2 vUv; varying float vDepth;
     void main(){
       vec2 ratio = vec2(min((uPlane.x/uPlane.y)/(uImg.x/uImg.y),1.), min((uPlane.y/uPlane.x)/(uImg.y/uImg.x),1.));
@@ -325,8 +250,8 @@ function initRoll(onOpen) {
       col.g = texture2D(uTex, uv).g;
       col.b = texture2D(uTex, uv-vec2(shift,0.)).b;
       float depth = smoothstep(-uR, uR, vDepth);
-      col *= mix(.12, 1., depth);
-      col = mix(vec3(.06), col, uReady);
+      col = mix(uBg, col, mix(.12, 1., depth));
+      col = mix(uBg, col, uReady);
       // rounded corners
       vec2 q = abs(vUv-.5)*uPlane; vec2 hb = uPlane*.5-.08;
       float rr = length(max(q-hb,0.))-.08;
@@ -340,7 +265,7 @@ function initRoll(onOpen) {
       side: THREE.DoubleSide,
       uniforms: {
         uTex: { value: null }, uImg: { value: new THREE.Vector2(1, 1) }, uPlane: { value: new THREE.Vector2(W, H) },
-        uR: { value: R }, uVel: { value: 0 }, uHover: { value: 0 }, uTime: { value: 0 }, uReady: { value: 0 },
+        uR: { value: R }, uVel: { value: 0 }, uHover: { value: 0 }, uTime: { value: 0 }, uReady: { value: 0 }, uBg: { value: new THREE.Color() },
       },
       vertexShader: vert, fragmentShader: frag,
     });
@@ -362,6 +287,8 @@ function initRoll(onOpen) {
     }));
   });
 
+  const setBg = () => { const c = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); meshes.forEach((m) => m.material.uniforms.uBg.value.set(c)); };
+  setBg(); addEventListener('themechange', setBg);
   // rotation state
   const st = { target: 0, cur: 0, vel: 0, dragging: false, lastX: 0, moved: 0 };
   function size() {
@@ -657,12 +584,13 @@ function initReveals() {
     if (x < -w) x += w; if (x > 0) x -= w;
     track.style.transform = `translateX(${x}px) skewX(${gsap.utils.clamp(-10, 10, (lenis.velocity || 0) * -0.4)}deg)`;
   });
-  gsap.to('.hero__title', { yPercent: -18, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('.hero__bottom, .hero__meta', { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '.hero', start: '30% top', end: '80% top', scrub: true } });
+  gsap.to('.vf', { scale: 0.92, borderRadius: 28, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.va__name', { yPercent: -30, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.va__row', { opacity: 0, y: -30, ease: 'none', scrollTrigger: { trigger: '#hero', start: '10% top', end: '50% top', scrub: true } });
 }
 
 /* ================================================= BOOT */
-const heroUniforms = initHero();
+const vfReady = initViewfinder();
 const openModal = initModal();
 const rollReady = initRoll(openModal);
 initIndex(openModal);
@@ -679,7 +607,7 @@ bindMagnetic();
   const num = $('#loaderNum'), bar = $('#loaderBar'), words = $$('.loader__words span');
   const prog = { v: 0 };
   let real = 0;
-  const assets = [rollReady, document.fonts ? document.fonts.ready : Promise.resolve()];
+  const assets = [rollReady, vfReady, document.fonts ? document.fonts.load('900 100px "Inter Tight"') : Promise.resolve()];
   assets.forEach((p) => p.then(() => (real += 1 / assets.length)));
   const minTime = reduced ? 300 : 1900;
   const t0 = performance.now();
@@ -700,9 +628,9 @@ bindMagnetic();
   const tl = gsap.timeline();
   tl.to('.loader__count, .loader__bar, .loader__words, .loader__grid', { yPercent: -40, opacity: 0, duration: 0.6, ease: 'expo.in' })
     .to('#loader', { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' }, '-=0.1')
-    .from('.hero__title .char', { yPercent: 120, rotate: 10, duration: 1.4, stagger: 0.035, ease: 'expo.out' }, '-=0.6')
-    .from(heroUniforms.uAmp, { value: 6, duration: 2.2, ease: 'expo.out' }, '<')
-    .from('.hero__bottom > *, .hero__meta, .nav', { y: 30, opacity: 0, stagger: 0.08, duration: 1, ease: 'expo.out' }, '-=1.1')
+    .add(() => { document.body.classList.remove('is-loading'); $('#name').classList.add('in'); }, '-=0.5')
+    .from('.vf', { clipPath: 'inset(50% 0 50% 0 round 14px)', duration: 1.4, ease: 'expo.inOut' }, '<')
+    .from('.va__row > *, .nav', { y: 30, opacity: 0, stagger: 0.08, duration: 1, ease: 'expo.out' }, '-=0.9')
     .add(() => {
       document.body.classList.remove('is-loading');
       $('#loader').style.display = 'none';
