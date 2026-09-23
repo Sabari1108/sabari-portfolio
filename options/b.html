@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Option B — Particle Portrait</title>
+<meta name="theme-color" content="#08080a">
+<script src="../assets/js/theme.js"></script>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="opt.css">
+<script type="importmap">{ "imports": { "three": "../assets/vendor/three.module.js" } }</script>
+</head>
+<body>
+<header class="nav">
+  <a class="nav__logo" href="../">SL<sup style="font-size:10px">®</sup></a>
+  <nav class="nav__links mono"><a href="#">Work</a><a href="#">Reels</a><a href="#">About</a><a href="#">Contact</a></nav>
+  <div class="nav__r"><button class="tt mono" data-theme-toggle aria-label="Change theme"><span class="tt__dot"></span><span data-theme-label>Auto</span></button></div>
+</header>
+<div class="opt-bar mono"><a href="a.html" >A · Viewfinder</a><a href="b.html" class="on">B · Particles</a><a href="c.html" >C · Editorial</a></div>
+<style>
+.hb{position:relative;height:100svh;min-height:640px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.hb canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hb__l{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:120px 0 90px clamp(16px,3.2vw,48px);gap:28px}
+.hb__kick{display:flex;gap:10px;align-items:center;color:var(--mut)}.hb__kick i{width:28px;height:1px;background:var(--mut)}
+.hb__name{font-family:var(--fd);font-weight:900;text-transform:uppercase;letter-spacing:-.06em;line-height:.8;white-space:nowrap}
+.hb__name span{display:block}
+.hb__name em{font-family:var(--fs);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;color:var(--acc)}
+.hb__intro{max-width:420px;font-size:17px;line-height:1.5;color:color-mix(in srgb,var(--fg) 80%,transparent)}
+.hb__stats{display:flex;gap:34px;border-top:1px solid var(--line);padding-top:20px;max-width:460px}
+.hb__stats b{display:block;font-family:var(--fd);font-weight:800;font-size:34px;letter-spacing:-.03em}
+.hb__stats span{color:var(--mut)}
+.hb__cta{display:flex;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:99px;border:1px solid var(--line);font-weight:600}
+.btn--p{background:var(--acc);color:var(--acc-ink);border-color:transparent}
+.hb__hint{position:absolute;right:clamp(16px,3.2vw,48px);bottom:84px;z-index:2;color:var(--mut)}
+@media(max-width:800px){.hb{grid-template-columns:1fr}.hb__l{justify-content:flex-end;padding-bottom:110px}.hb__stats{gap:20px}.hb__hint{display:none}}
+</style>
+<section class="hb" id="hero">
+  <canvas id="c"></canvas>
+  <div class="hb__l">
+    <span class="hb__kick mono"><i></i>Graphic Designer &amp; Video Editor</span>
+    <h1 class="hb__name" id="name"><span>Sabari</span><span>Logesh<em>.</em></span></h1>
+    <p class="hb__intro">I turn briefs into motion graphics, campaign systems and AI-assisted films for brands across healthcare, education, retail and wellness.</p>
+    <div class="hb__stats"><div><b>2+</b><span class="mono">Years</span></div><div><b>10</b><span class="mono">Brands</span></div><div><b>14</b><span class="mono">Films &amp; reels</span></div></div>
+    <div class="hb__cta"><a class="btn btn--p" href="#">View work →</a><a class="btn" href="mailto:sabarilogesh11@gmail.com">Say hello</a></div>
+  </div>
+  <span class="hb__hint mono">Move your cursor through me ✳</span>
+</section>
+<script type="module">
+import * as THREE from 'three';
+const $=s=>document.querySelector(s);
+function fit(){const n=$('#name');const W=n.parentElement.clientWidth-20;n.style.fontSize='100px';const w=Math.max(...[...n.children].map(s=>{const r=document.createRange();r.selectNodeContents(s);return r.getBoundingClientRect().width}));n.style.fontSize=Math.min(100*W/w,220)+'px'}
+document.fonts.load('900 100px "Inter Tight"').then(fit);setTimeout(fit,1500);addEventListener('resize',fit);fit();
+const img=new Image();img.src='../assets/img/me/front-mono.webp';await img.decode();
+// sample portrait into particles
+const mob=innerWidth<800, step=mob?4:3;
+const cw=Math.round(img.width/ (img.width>600?1.4:1)), ch=Math.round(img.height*cw/img.width);
+const cv=document.createElement('canvas');cv.width=cw;cv.height=ch;const cx=cv.getContext('2d');cx.drawImage(img,0,0,cw,ch);
+const data=cx.getImageData(0,0,cw,ch).data;const P=[],B=[];
+for(let y=0;y<ch;y+=step)for(let x=0;x<cw;x+=step){const i=(y*cw+x)*4;const fx=Math.min(1,(1-x/cw)/.22),fy=Math.min(1,(1-y/ch)/.25);if(data[i+3]<40||Math.random()>fx*fy)continue;const l=(data[i]+data[i+1]+data[i+2])/765;P.push((x/cw-.5)*cw/ch,-(y/ch-.5));B.push(l);}
+const n=B.length,pos=new Float32Array(n*3),bri=new Float32Array(n),rnd=new Float32Array(n);
+for(let i=0;i<n;i++){pos[i*3]=P[i*2];pos[i*3+1]=P[i*2+1];pos[i*3+2]=0;bri[i]=B[i];rnd[i]=Math.random()}
+const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('aB',new THREE.BufferAttribute(bri,1));g.setAttribute('aR',new THREE.BufferAttribute(rnd,1));
+const R=new THREE.WebGLRenderer({canvas:$('#c'),antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene(),cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,10);cam.position.z=2;
+const U={uT:{value:0},uM:{value:new THREE.Vector2(9,9)},uIn:{value:0},uS:{value:1},uLight:{value:0},uPR:{value:R.getPixelRatio()},uScroll:{value:0},uOff:{value:new THREE.Vector2()},uScale:{value:1},uAcc:{value:new THREE.Color()}};
+const mat=new THREE.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,
+ vertexShader:`uniform float uT,uIn,uS,uPR,uScroll,uScale,uLight;uniform vec2 uM,uOff;attribute float aB,aR;varying float vB;varying float vR;
+  void main(){vec2 p=position.xy*uScale+uOff;
+   vec2 scatter=vec2(cos(aR*6283.),sin(aR*9127.))*(1.5+aR);
+   p=mix(p+scatter,p,smoothstep(0.,1.,clamp(uIn*1.4-aR*.4,0.,1.)));
+   p.y+=sin(p.x*6.+uT*1.3+aR*6.)*.004;
+   vec2 d=p-uM;float l=length(d);p+=normalize(d+1e-4)*smoothstep(.22,0.,l)*.16*(0.5+aR);
+   p+=vec2(cos(aR*31.+uT),sin(aR*17.+uT))*uScroll*(.6+aR*1.4);
+   gl_Position=vec4(p,0.,1.);gl_PointSize=(uLight>.5? (1.+(1.-aB)*2.2) : (.8+aB*2.6))*uPR*uS;vB=aB;vR=aR;}`,
+ fragmentShader:`uniform float uLight;uniform vec3 uAcc;varying float vB;varying float vR;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;
+  float ink=1.-vB; vec3 c=uLight>.5?vec3(.07):mix(vec3(.55,.45,1.),vec3(.96,.95,.9),smoothstep(.2,.8,vB)); if(vR>.97) c=uAcc;
+  float a=uLight>.5? (.2+ink*.85) : (.15+vB*1.1);
+  gl_FragColor=vec4(c,a*(1.-d*1.6));}`});
+scene.add(new THREE.Points(g,mat));
+function size(){const w=innerWidth,h=$('#hero').clientHeight;R.setSize(w,h,false);const asp=w/h;cam.left=-asp;cam.right=asp;cam.top=1;cam.bottom=-1;cam.updateProjectionMatrix();
+ // place portrait on right half (desktop) / top (mobile)
+ if(w<800){U.uScale.value=.95;U.uOff.value.set(0,.52)}else{U.uScale.value=1.75;U.uOff.value.set(asp*.48,-.02)}
+ U.uS.value=w<800?1.1:1.35; mat.vertexShader=mat.vertexShader;}
+size();addEventListener('resize',size);
+function th(){const l=document.documentElement.dataset.theme==='light';U.uLight.value=l?1:0;U.uAcc.value.set(l?'#3b2bff':'#d4ff3a')}th();addEventListener('themechange',th);
+// shader works in clip space for x: convert mouse to [-1..1] but account aspect in positions
+const m=new THREE.Vector2(9,9),ms=new THREE.Vector2(9,9);
+addEventListener('pointermove',e=>{const r=$('#hero').getBoundingClientRect();m.set((e.clientX/r.width*2-1),-( (e.clientY-r.top)/r.height*2-1))});
+$('#hero').addEventListener('pointerleave',()=>m.set(9,9));
+const clk=new THREE.Clock();
+(function loop(){requestAnimationFrame(loop);const t=clk.getElapsedTime();U.uT.value=t;U.uIn.value=Math.min(t/2.4,1);
+ ms.lerp(m,.12); const asp=innerWidth/$('#hero').clientHeight; U.uM.value.set(ms.x,ms.y);
+ U.uScroll.value+=(Math.min(scrollY/innerHeight,1)-U.uScroll.value)*.1;
+ R.render(scene,cam);})();
+// positions are in "aspect" space; squash x into clip space
+mat.onBeforeCompile=()=>{};
+mat.vertexShader=mat.vertexShader.replace('gl_Position=vec4(p,0.,1.);','gl_Position=projectionMatrix*viewMatrix*vec4(p,0.,1.);');
+mat.needsUpdate=true;
+// mouse must be in the same aspect space
+addEventListener('pointermove',e=>{const r=$('#hero').getBoundingClientRect();const asp=r.width/r.height;m.set((e.clientX/r.width*2-1)*asp,-((e.clientY-r.top)/r.height*2-1))});
+</script>
+
+</body>
+</html>

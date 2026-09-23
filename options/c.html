@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Option C — Editorial</title>
+<meta name="theme-color" content="#08080a">
+<script src="../assets/js/theme.js"></script>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="opt.css">
+<script type="importmap">{ "imports": { "three": "../assets/vendor/three.module.js" } }</script>
+</head>
+<body>
+<header class="nav">
+  <a class="nav__logo" href="../">SL<sup style="font-size:10px">®</sup></a>
+  <nav class="nav__links mono"><a href="#">Work</a><a href="#">Reels</a><a href="#">About</a><a href="#">Contact</a></nav>
+  <div class="nav__r"><button class="tt mono" data-theme-toggle aria-label="Change theme"><span class="tt__dot"></span><span data-theme-label>Auto</span></button></div>
+</header>
+<div class="opt-bar mono"><a href="a.html" >A · Viewfinder</a><a href="b.html" >B · Particles</a><a href="c.html" class="on">C · Editorial</a></div>
+<style>
+.hc{position:relative;min-height:100svh;padding:96px clamp(16px,3.2vw,48px) 90px;display:flex;flex-direction:column;overflow:hidden}
+.hc__top{display:flex;justify-content:space-between;color:var(--mut);border-bottom:1px solid var(--line);padding-bottom:14px}
+.hc__name{font-family:var(--fd);font-weight:900;text-transform:uppercase;letter-spacing:-.065em;line-height:.78;white-space:nowrap;margin:22px 0 26px;position:relative;z-index:3}
+.hc__name .ch{display:inline-block;transition:transform .5s cubic-bezier(.19,1,.22,1),color .3s}
+.hc__grid{flex:1;display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:clamp(16px,2.4vw,36px);align-items:stretch}
+.hc__col{display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.hc__lead{font-family:var(--fs);font-size:clamp(26px,2.4vw,40px);line-height:1.08}
+.hc__lead i{color:var(--acc)}
+.hc__meta{display:grid;gap:10px;color:var(--mut)}
+.hc__meta b{color:var(--fg);font-weight:500}
+.hc__photo{position:relative;border-radius:18px;overflow:hidden;min-height:440px;background:var(--bg2)}
+.hc__photo canvas{position:absolute;inset:0;width:100%;height:100%}
+.hc__photo .mono{position:absolute;left:14px;bottom:12px;color:#fff;mix-blend-mode:difference;z-index:2}
+.hc__list{list-style:none;border-top:1px solid var(--line)}
+.hc__list li{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);transition:padding .4s cubic-bezier(.19,1,.22,1)}
+.hc__list li:hover{padding-left:12px}
+.hc__list strong{font-family:var(--fd);font-weight:800;font-weight:700;font-size:19px;letter-spacing:-.02em}
+.hc__list span{color:var(--mut)}
+.trail{position:fixed;left:0;top:0;width:170px;height:210px;pointer-events:none;z-index:2;border-radius:10px;overflow:hidden;opacity:0}
+.trail img{width:100%;height:100%;object-fit:cover}
+@media(max-width:900px){.hc__grid{grid-template-columns:1fr}.hc__photo{min-height:420px;order:-1}}
+.tick{margin-top:26px;border-top:1px solid var(--line);padding-top:16px;overflow:hidden;white-space:nowrap;color:var(--mut)}.tick div{display:inline-flex;gap:46px;animation:tk 30s linear infinite}.tick b{color:var(--fg);font-weight:500}@keyframes tk{to{transform:translateX(-50%)}}
+</style>
+<section class="hc" id="hero">
+  <div class="hc__top mono"><span>Portfolio — Vol. 26</span><span id="clock">IST</span><span>Bangalore, India</span></div>
+  <h1 class="hc__name" id="name">Sabari Logesh</h1>
+  <div class="hc__grid">
+    <div class="hc__col">
+      <p class="hc__lead">Graphic designer &amp; video editor making <i>motion</i>, campaigns and films that move people to act.</p>
+      <div class="hc__meta mono"><span>Now — <b>Graphic &amp; VFX Designer</b></span><span>Tools — <b>Ae · Pr · Ai · Ps · Figma · Framer</b></span><span>Status — <b style="color:var(--acc)">● Open to work</b></span></div>
+    </div>
+    <div class="hc__photo" id="photo"><canvas id="c"></canvas><span class="mono">Hover to distort ✳</span></div>
+    <div class="hc__col">
+      <ul class="hc__list mono" id="list">
+        <li data-img="../assets/video/alpha-teaser.jpg"><strong>Introducing ALPHA</strong><span>Motion</span></li>
+        <li data-img="../assets/video/kognivera-diwali-cover.jpg"><strong>One Small Spark</strong><span>Animation</span></li>
+        <li data-img="../assets/video/rudraksha-ai-video.jpg"><strong>Rudraksha</strong><span>AI Film</span></li>
+        <li data-img="../assets/img/idex-key-visual-dark.webp"><strong>Big Bold Sale</strong><span>Campaign</span></li>
+        <li data-img="../assets/img/houzlook-carousel-1.webp"><strong>Houzlook</strong><span>Brand</span></li>
+      </ul>
+      <p class="mono" style="color:var(--mut)">Move across the page — the work follows you.</p>
+    </div>
+  </div>
+  <div class="tick mono"><div><b>Trusted by —</b><span>AstraZeneca</span><span>AJIO</span><span>Houzlook Interiors</span><span>Vaishnavi Hospitals</span><span>JD Institute</span><span>Dharmāyana</span><span>Kognivera</span><span>Glentree Academy</span><span>Zootopia</span><span>Anuvic Designs</span><b>Trusted by —</b><span>AstraZeneca</span><span>AJIO</span><span>Houzlook Interiors</span><span>Vaishnavi Hospitals</span><span>JD Institute</span><span>Dharmāyana</span><span>Kognivera</span><span>Glentree Academy</span><span>Zootopia</span><span>Anuvic Designs</span></div></div>
+</section>
+<script type="module">
+import * as THREE from 'three';
+const $=s=>document.querySelector(s);
+// name: split + fit to full width + wave on hover
+const nm=$('#name');nm.innerHTML=[...nm.textContent].map(c=>`<span class="ch">${c===' '?'</span><span class="ch" style="width:.26em">':c}</span>`).join('');
+function fit(){nm.style.fontSize='100px';const w=(()=>{const r=document.createRange();r.selectNodeContents(nm);return r.getBoundingClientRect().width})();nm.style.fontSize=(100*(nm.clientWidth)/w*.995)+'px'}document.fonts.load('900 100px "Inter Tight"').then(fit);setTimeout(fit,1500);addEventListener('resize',fit);fit();
+const chs=[...nm.children];nm.addEventListener('pointermove',e=>{chs.forEach(c=>{const r=c.getBoundingClientRect();const d=Math.abs(e.clientX-(r.left+r.width/2));const k=Math.max(0,1-d/220);c.style.transform=`translateY(${-k*14}%) scaleY(${1+k*.12})`;c.style.color=k>.7?'var(--acc)':''})});
+nm.addEventListener('pointerleave',()=>chs.forEach(c=>{c.style.transform='';c.style.color=''}));
+setInterval(()=>{$('#clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour12:false})+' IST'},1000);
+// liquid distortion portrait
+const box=$('#photo'),R=new THREE.WebGLRenderer({canvas:$('#c'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+const sc=new THREE.Scene(),cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const tex=await new THREE.TextureLoader().loadAsync('../assets/img/me/front-photo.webp');tex.colorSpace=THREE.SRGBColorSpace;
+const U={uT:{value:tex},uM:{value:new THREE.Vector2(.5,.5)},uV:{value:new THREE.Vector2()},uH:{value:0},uTime:{value:0},uRes:{value:new THREE.Vector2(1,1)},uImg:{value:new THREE.Vector2(tex.image.width,tex.image.height)},uMono:{value:0}};
+sc.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:U,vertexShader:`varying vec2 v;void main(){v=uv;gl_Position=vec4(position,1.);}`,
+ fragmentShader:`uniform sampler2D uT;uniform vec2 uM,uV,uRes,uImg;uniform float uH,uTime,uMono;varying vec2 v;
+ void main(){vec2 r=vec2(min((uRes.x/uRes.y)/(uImg.x/uImg.y),1.),min((uRes.y/uRes.x)/(uImg.y/uImg.x),1.));
+  vec2 uv=vec2(v.x*r.x+(1.-r.x)*.5,v.y*r.y+(1.-r.y)*.5);
+  vec2 asp=vec2(uRes.x/uRes.y,1.);float d=distance(v*asp,uM*asp);
+  float ripple=sin(d*38.-uTime*6.)*.012*smoothstep(.45,0.,d)*uH;
+  vec2 push=uV*smoothstep(.35,0.,d)*.6*uH;
+  vec2 q=uv+normalize(v-uM+1e-4)*ripple-push;
+  float s=length(push)*.35+.002*uH;
+  vec3 c=vec3(texture2D(uT,q+vec2(s,0.)).r,texture2D(uT,q).g,texture2D(uT,q-vec2(s,0.)).b);
+  float g=dot(c,vec3(.299,.587,.114));c=mix(c,vec3(g)*vec3(1.02,1.,.97),uMono*(1.-smoothstep(.0,.35,d)*uH));
+  gl_FragColor=vec4(c,1.);}`})));
+function size(){const w=box.clientWidth,h=box.clientHeight;R.setSize(w,h,false);U.uRes.value.set(w,h)}new ResizeObserver(size).observe(box);size();
+const m=new THREE.Vector2(.5,.5),pm=new THREE.Vector2(.5,.5);let hov=0;
+box.addEventListener('pointermove',e=>{const r=box.getBoundingClientRect();m.set((e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height)});
+box.addEventListener('pointerenter',()=>hov=1);box.addEventListener('pointerleave',()=>hov=0);
+function th(){U.uMono.value=document.documentElement.dataset.theme==='light'?0:1}th();addEventListener('themechange',th);
+const clk=new THREE.Clock();
+(function loop(){requestAnimationFrame(loop);U.uTime.value=clk.getElapsedTime();const cur=U.uM.value;const nx=cur.clone().lerp(m,.12);U.uV.value.lerp(nx.clone().sub(cur),.2);cur.copy(nx);U.uH.value+=(hov-U.uH.value)*.08;R.render(sc,cam)})();
+// magnetic image trail across the hero
+const imgs=[...$('#list').children].map(li=>li.dataset.img);let last={x:0,y:0},k=0;
+$('#hero').addEventListener('pointermove',e=>{if(box.contains(e.target)||nm.contains(e.target))return;const dx=e.clientX-last.x,dy=e.clientY-last.y;if(Math.hypot(dx,dy)<110)return;last={x:e.clientX,y:e.clientY};
+ const t=document.createElement('div');t.className='trail';t.innerHTML=`<img src="${imgs[k++%imgs.length]}" alt="">`;document.body.appendChild(t);
+ const rot=(Math.random()-.5)*16;t.animate([{transform:`translate(${e.clientX-85}px,${e.clientY-105}px) scale(.4) rotate(${rot}deg)`,opacity:0},{transform:`translate(${e.clientX-85}px,${e.clientY-105}px) scale(1) rotate(${rot/2}deg)`,opacity:1,offset:.25},{transform:`translate(${e.clientX-85+dx*.6}px,${e.clientY-105+dy*.6+40}px) scale(.85) rotate(0deg)`,opacity:0}],{duration:1400,easing:'cubic-bezier(.19,1,.22,1)'}).onfinish=()=>t.remove()});
+
+</script>
+
+</body>
+</html>
